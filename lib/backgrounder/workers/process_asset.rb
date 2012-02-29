@@ -14,6 +14,7 @@ module CarrierWave
         record = resource.find id
         record.send(:"process_#{column}_upload=", true)
         if record.send(:"#{column}").recreate_versions! && record.respond_to?(:"#{column}_processing")
+          record.send(:after_processing) if record.respond_to?(:after_processing)
           record.update_attribute :"#{column}_processing", nil
         end
       end
